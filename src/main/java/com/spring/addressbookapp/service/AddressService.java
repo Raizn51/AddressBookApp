@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 public class AddressService implements IAddressService {
-    private List<Address> addressList = new ArrayList<>();
+    private final List<Address> addressList = new ArrayList<>();
 
     @Override
     public List<Address> getAllAddresses() {
@@ -23,7 +24,6 @@ public class AddressService implements IAddressService {
                 .findFirst()
                 .orElse(null);
     }
-
 
     @Override
     public Address addAddress(AddressDTO addressDTO) {
@@ -52,4 +52,3 @@ public class AddressService implements IAddressService {
         addressList.removeIf(address -> address.getId() == id);
     }
 }
-
