@@ -2,6 +2,7 @@ package com.spring.addressbookapp.service;
 
 
 import com.spring.addressbookapp.dto.AddressDTO;
+import com.spring.addressbookapp.exceptions.*;
 import com.spring.addressbookapp.model.Address;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class AddressService implements IAddressService
         return addressList.stream()
                 .filter(address -> address.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new AddressBookException("Address Not Found"));
     }
 
     @Override
