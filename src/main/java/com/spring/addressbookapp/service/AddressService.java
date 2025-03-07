@@ -1,72 +1,67 @@
 package com.spring.addressbookapp.service;
 
-
 import com.spring.addressbookapp.dto.AddressDTO;
-import com.spring.addressbookapp.exceptions.*;
 import com.spring.addressbookapp.model.Address;
+import com.spring.addressbookapp.repository.AddressBookRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
-
 @Service
-public class AddressService implements IAddressService
-{
-    private final List<Address> addressList = new ArrayList<>();
+@Slf4j
+public class AddressService implements IAddressService {
+
+    @Autowired
+    private AddressBookRepository addressBookRepository;
 
     @Override
     public List<Address> getAllAddresses() {
-        return addressList;
+        return addressBookRepository.findAll();
     }
 
     @Override
     public Address getAddressById(int id) {
-        return addressList.stream()
-                .filter(address -> address.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new AddressBookException("Address Not Found"));
+        return addressBookRepository.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public Address addAddress(AddressDTO addressDTO) {
-        int newId = addressList.size() + 1;
-        Address address = new Address(newId, addressDTO);
-        addressList.add(address);
-        return address;
+        Address address = new Address(addressDTO);
+        log.debug("Address Book Data: " + address.toString());
+        return addressBookRepository.save(address);
     }
 
     @Override
+    @Transactional
     public List<Address> addMultipleAddresses(List<AddressDTO> addressDTOList) {
-        List<Address> newAddressList= new ArrayList<>();
-        for(AddressDTO DTO: addressDTOList)
-        {
-            int newId = addressList.size() + 1;
-            Address address = new Address(newId, DTO);
-            addressList.add(address);
-            newAddressList.add(address);
-        }
-        return newAddressList;
+        List<Address> newAddressList = addressDTOList.stream()
+                .map(Address::new)
+                .toList();
+        return addressBookRepository.saveAll(newAddressList);
     }
 
     @Override
+    @Transactional
     public Address updateAddress(int id, AddressDTO addressDTO) {
-        for (Address address : addressList) {
-            if (address.getId() == id) {
-                address.setFullName(addressDTO.fullName);
-                address.setAddress(addressDTO.address);
-                address.setCity(addressDTO.city);
-                address.setState(addressDTO.state);
-                address.setZipCode(addressDTO.zipCode);
-                address.setPhoneNumber(addressDTO.phoneNumber);
-                return address;
-            }
-        }
-        return null;
+        return addressBookRepository.findById(id)
+                .map(existingAddress -> {
+                    existingAddress.setFullName(addressDTO.fullName);
+                    existingAddress.setAddress(addressDTO.address);
+                    existingAddress.setCity(addressDTO.city);
+                    existingAddress.setState(addressDTO.state);
+                    existingAddress.setZipCode(addressDTO.zipCode);
+                    existingAddress.setPhoneNumber(addressDTO.phoneNumber);
+                    return addressBookRepository.save(existingAddress);
+                })
+                .orElse(null);
     }
 
-
     @Override
+    @Transactional
     public void deleteAddress(int id) {
-        addressList.removeIf(address -> address.getId() == id);
+        addressBookRepository.deleteById(id);
     }
 }
