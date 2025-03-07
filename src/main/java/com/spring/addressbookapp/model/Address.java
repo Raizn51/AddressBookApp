@@ -5,17 +5,21 @@ import com.spring.addressbookapp.dto.AddressDTO;
 
 public class Address {
     private int id;
-    private String name;
-    private String phone;
+    private String fullName;
+    private String address;
     private String city;
     private String state;
+    private String zipCode;
+    private String phoneNumber;
 
     public Address(int id, AddressDTO addressDTO) {
         this.id = id;
-        this.name = addressDTO.name;
-        this.phone = addressDTO.phone;
+        this.fullName = addressDTO.fullName;
+        this.address= addressDTO.address;
         this.city = addressDTO.city;
         this.state = addressDTO.state;
+        this.zipCode=addressDTO.zipCode;
+        this.phoneNumber=addressDTO.phoneNumber;
     }
 
     public int getId() {
@@ -26,20 +30,12 @@ public class Address {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getCity() {
@@ -56,5 +52,29 @@ public class Address {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

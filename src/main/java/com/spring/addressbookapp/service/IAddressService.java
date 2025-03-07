@@ -15,4 +15,5 @@ public interface IAddressService {
     Address addAddress(AddressDTO addressDTO);
     Address updateAddress(int id, AddressDTO addressDTO);
     void deleteAddress(int id);
+    public List<Address> addMultipleAddresses(List<AddressDTO> addressDTOList);
 }

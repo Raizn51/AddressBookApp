@@ -4,6 +4,7 @@ package com.spring.addressbookapp.controller;
 import com.spring.addressbookapp.dto.*;
 import com.spring.addressbookapp.model.Address;
 import com.spring.addressbookapp.service.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class AddressController {
     @Autowired
     private IAddressService addressService;
 
-    @GetMapping("/get")
+    @GetMapping(value ={"","/","/get"})
     public ResponseEntity<ResponseDTO> getAllAddresses() {
         List<Address> addresses = addressService.getAllAddresses();
         ResponseDTO responseDTO = new ResponseDTO("Get Call Successful", addresses);
@@ -40,6 +41,12 @@ public class AddressController {
         Address address = addressService.addAddress(addressDTO);
         ResponseDTO responseDTO = new ResponseDTO("Created Address Successfully", address);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/create/bulk")
+    public ResponseEntity<ResponseDTO> addMultipleAddresses(@Valid @RequestBody List<AddressDTO> addressDTOList) {
+        List<Address> addresses = addressService.addMultipleAddresses(addressDTOList);
+        return new ResponseEntity<>(new ResponseDTO("Created Multiple Addresses Successfully", addresses), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")

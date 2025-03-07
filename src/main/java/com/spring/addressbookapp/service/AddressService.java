@@ -9,7 +9,8 @@ import java.util.List;
 
 
 @Service
-public class AddressService implements IAddressService {
+public class AddressService implements IAddressService
+{
     private final List<Address> addressList = new ArrayList<>();
 
     @Override
@@ -34,18 +35,34 @@ public class AddressService implements IAddressService {
     }
 
     @Override
+    public List<Address> addMultipleAddresses(List<AddressDTO> addressDTOList) {
+        List<Address> newAddressList= new ArrayList<>();
+        for(AddressDTO DTO: addressDTOList)
+        {
+            int newId = addressList.size() + 1;
+            Address address = new Address(newId, DTO);
+            addressList.add(address);
+            newAddressList.add(address);
+        }
+        return newAddressList;
+    }
+
+    @Override
     public Address updateAddress(int id, AddressDTO addressDTO) {
         for (Address address : addressList) {
             if (address.getId() == id) {
-                address.setName(addressDTO.name);
-                address.setPhone(addressDTO.phone);
+                address.setFullName(addressDTO.fullName);
+                address.setAddress(addressDTO.address);
                 address.setCity(addressDTO.city);
                 address.setState(addressDTO.state);
+                address.setZipCode(addressDTO.zipCode);
+                address.setPhoneNumber(addressDTO.phoneNumber);
                 return address;
             }
         }
         return null;
     }
+
 
     @Override
     public void deleteAddress(int id) {
